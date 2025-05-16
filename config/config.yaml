@@ -1,0 +1,2 @@
+mysql:
+  dsn: "root:1238564@tcp(127.0.0.1:3306)/lets_talk?charset=utf8mb4&parseTime=True&loc=Local"
