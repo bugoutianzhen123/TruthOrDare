@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/bugoutianzhen123/TruthOrDare/domain"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

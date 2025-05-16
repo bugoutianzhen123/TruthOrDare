@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/bugoutianzhen123/TruthOrDare/domain"
 	"time"
 )
 

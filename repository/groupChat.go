@@ -1,5 +1,7 @@
 package repository
 
+import "github.com/bugoutianzhen123/TruthOrDare/domain"
+
 // 房间持久化接口
 type GroupChat interface {
 	SaveGroupMessage(message domain.GroupChatHistory) error

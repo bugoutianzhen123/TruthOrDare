@@ -3,7 +3,6 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/bugoutianzhen123/TruthOrDare/repository"
 	"github.com/gorilla/websocket"
 	"log"
 	"sync"
@@ -13,7 +12,6 @@ import (
 type GameClientManager struct {
 	Rooms map[uint64]*GameRoom
 	mutex sync.Mutex
-	r     repository.Repository
 }
 
 type GameRoom struct {

@@ -5,6 +5,24 @@ import (
 	"time"
 )
 
+const (
+	normal  = 1 << 0
+	couple  = 1 << 1
+	friends = 1 << 2
+	party   = 1 << 3
+)
+
+const (
+	mild     = 1 << 0
+	exciting = 1 << 1
+	funny    = 1 << 2
+)
+
+const (
+	truth = 1
+	dare  = 2
+)
+
 // cardInRepository
 type Card struct {
 	ID        uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
@@ -13,7 +31,6 @@ type Card struct {
 	Type      int8      `json:"type"`  // truth or dare
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`
-	DeletedAt time.Time `json:"deleted_at"`
 }
 
 type CardResponse struct {

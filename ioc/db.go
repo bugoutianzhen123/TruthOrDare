@@ -1,6 +1,8 @@
 package ioc
 
 import (
+	"github.com/bugoutianzhen123/TruthOrDare/pkg/logger"
+	"github.com/bugoutianzhen123/TruthOrDare/repository/dao"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

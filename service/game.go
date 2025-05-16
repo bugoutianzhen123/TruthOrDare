@@ -8,7 +8,7 @@ type GameService interface {
 	GetGameRoom(roomId, hostId uint64) *domain.GameRoom
 	CreateCard(c domain.Card) error
 	DeleteCard(id uint64) error
-	GetCards(mode, ty, style int8) *[]domain.CardResponse
+	GetCards(mode, ty, style, num int8) *[]domain.CardResponse
 }
 
 func (s *ser) GetGameRoom(roomId, hostId uint64) *domain.GameRoom {
@@ -23,8 +23,8 @@ func (s *ser) DeleteCard(id uint64) error {
 	return s.r.DeletedCard(domain.Card{ID: id})
 }
 
-func (s *ser) GetCards(mode, ty, style int8) *[]domain.CardResponse {
-	cards := s.r.GetCards(mode, ty, style)
+func (s *ser) GetCards(mode, ty, style, num int8) *[]domain.CardResponse {
+	cards := s.r.GetCards(mode, ty, style, num)
 	cardsResponse := []domain.CardResponse{}
 	for _, c := range *cards {
 		c := domain.CardResponse{

@@ -1,8 +1,10 @@
 package ioc
 
 import (
+	"github.com/bugoutianzhen123/TruthOrDare/pkg/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func InitLogger() logger.Logger {

@@ -42,7 +42,8 @@ func (h *hand) StartGame(c *gin.Context) {
 	mode, _ := parseInt8(c, "mode")
 	ty, _ := parseInt8(c, "type")
 	style, _ := parseInt8(c, "style")
-	cards := h.ser.GetCards(mode, ty, style)
+	num, _ := parseInt8(c, "num")
+	cards := h.ser.GetCards(mode, ty, style, num)
 	c.JSON(200, gin.H{
 		"data": cards,
 	})
@@ -52,10 +53,14 @@ func (h *hand) CreateCard(c *gin.Context) {
 	card := domain.Card{}
 	err := c.ShouldBind(&card)
 	if err != nil {
-		c.JSON(400, gin.H{})
+		c.JSON(400, gin.H{
+			"message": err.Error(),
+		})
 	}
 	if err := h.ser.CreateCard(card); err != nil {
-		c.JSON(400, gin.H{})
+		c.JSON(400, gin.H{
+			"message": err.Error(),
+		})
 	}
 	c.JSON(200, gin.H{})
 }
@@ -63,7 +68,9 @@ func (h *hand) CreateCard(c *gin.Context) {
 func (h *hand) RemoveCard(c *gin.Context) {
 	id, _ := parseId(c, "card_id")
 	if err := h.ser.DeleteCard(id); err != nil {
-		c.JSON(400, gin.H{})
+		c.JSON(400, gin.H{
+			"message": err.Error(),
+		})
 	}
 	c.JSON(200, gin.H{})
 }
