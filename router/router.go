@@ -2,12 +2,23 @@ package router
 
 import (
 	"github.com/bugoutianzhen123/TruthOrDare/handler"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func InitEngine(h handler.Handler) *gin.Engine {
 	g := gin.Default()
+
+	g.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // 或者指定前端地址，例如 http://localhost:3000
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	pprof.Register(g)
 
