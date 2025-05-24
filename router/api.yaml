@@ -1,0 +1,291 @@
+openapi: 3.0.0
+info:
+  title: TruthOrDare API
+  version: 1.0.0
+  description: 真心话大冒险项目后端接口文档
+servers:
+  - url: http://localhost:8080
+paths:
+  /user/register:
+    post:
+      summary: 用户注册
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        '201':
+          description: 注册成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: 参数错误或邮箱已被注册
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /user/login:
+    post:
+      summary: 用户登录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: 登录失败
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /game/start:
+    get:
+      summary: 获取随机卡片
+      parameters:
+        - in: query
+          name: mode
+          schema: { type: integer }
+        - in: query
+          name: type
+          schema: { type: integer }
+        - in: query
+          name: style
+          schema: { type: integer }
+        - in: query
+          name: num
+          schema: { type: integer }
+      responses:
+        '200':
+          description: 卡片列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CardResponse'
+
+  /game/createCard:
+    post:
+      summary: 新增卡片
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /game/batchCreateCards:
+    post:
+      summary: 批量新增卡片
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Card'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /game/deleteCard:
+    delete:
+      summary: 删除卡片
+      parameters:
+        - in: query
+          name: card_id
+          schema: { type: integer }
+          required: true
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /game/saveGameHistory:
+    post:
+      summary: 保存游戏记录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                mode:
+                  type: integer
+                type:
+                  type: integer
+                style:
+                  type: integer
+                card_number:
+                  type: integer
+                card_ids:
+                  type: array
+                  items: { type: integer }
+              required: [user_id, mode, type, style, card_number, card_ids]
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /game/allGameHistories:
+    get:
+      summary: 获取所有游戏记录
+      responses:
+        '200':
+          description: 游戏记录列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GameHistory'
+
+  /game/userGameHistories:
+    get:
+      summary: 获取指定用户的游戏记录
+      parameters:
+        - in: query
+          name: user_id
+          schema: { type: integer }
+          required: true
+      responses:
+        '200':
+          description: 游戏记录列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GameHistory'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+
+    Card:
+      type: object
+      properties:
+        mode:
+          type: integer
+        type:
+          type: integer
+        style:
+          type: integer
+        content:
+          type: string
+
+    CardResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+
+    GameHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        mode:
+          type: integer
+        type:
+          type: integer
+        style:
+          type: integer
+        card_number:
+          type: integer
+        card_ids:
+          type: string
+        created_at:
+          type: string
+          format: date-time

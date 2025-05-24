@@ -14,6 +14,7 @@ func InitEngine(h handler.Handler) *gin.Engine {
 	user := g.Group("/user")
 	{
 		user.POST("/register", h.CreateUser)
+		user.POST("/login", h.Login)
 	}
 
 	//friend := g.Group("/friend")
@@ -32,6 +33,10 @@ func InitEngine(h handler.Handler) *gin.Engine {
 		game.GET("/start", h.StartGame)
 		game.POST("/createCard", h.CreateCard)
 		game.DELETE("/deleteCard", h.RemoveCard)
+		game.POST("/batchCreateCards", h.BatchCreateCards)
+		game.POST("/saveGameHistory", h.SaveGameHistory)
+		game.GET("/allGameHistories", h.GetAllGameHistories)
+		game.GET("/userGameHistories", h.GetGameHistoriesByUserID)
 	}
 
 	return g

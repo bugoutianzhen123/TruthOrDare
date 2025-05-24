@@ -52,6 +52,17 @@ type GameMessage struct {
 	Payload json.RawMessage `json:"payload"` // 具体操作的内容
 }
 
+type GameHistory struct {
+	ID         uint64   `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
+	UserID     uint64   `json:"user_id"`
+	Mode       int8     `json:"mode"`
+	Type       int8     `json:"type"`
+	Style      int8     `json:"style"`
+	CardNumber int      `json:"card_number"`
+	CardIDs    string   `json:"card_ids"` // 存储为逗号分隔字符串
+	CreatedAt  time.Time `json:"created_at"`
+}
+
 type EmptyPayload struct{}
 
 type FlipCardPayload struct {

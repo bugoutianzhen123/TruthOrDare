@@ -1,15 +1,21 @@
 package handler
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/bugoutianzhen123/TruthOrDare/domain"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 type GameHandler interface {
 	StartGame(c *gin.Context)
 	CreateCard(c *gin.Context)
 	RemoveCard(c *gin.Context)
+	BatchCreateCards(c *gin.Context)
+	SaveGameHistory(c *gin.Context)
+	GetAllGameHistories(c *gin.Context)
+	GetGameHistoriesByUserID(c *gin.Context)
 }
 
 // user id     room id
@@ -73,4 +79,73 @@ func (h *hand) RemoveCard(c *gin.Context) {
 		})
 	}
 	c.JSON(200, gin.H{})
+}
+
+func (h *hand) BatchCreateCards(c *gin.Context) {
+	var cards []domain.Card
+	if err := c.ShouldBindJSON(&cards); err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+	if err := h.ser.BatchCreateCards(cards); err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(200, gin.H{})
+}
+
+func (h *hand) SaveGameHistory(c *gin.Context) {
+	var req struct {
+		Mode       int8    `json:"mode"`
+		Type       int8    `json:"type"`
+		Style      int8    `json:"style"`
+		CardNumber int     `json:"card_number"`
+		CardIDs    []uint64 `json:"card_ids"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+	// 将 card_ids 转为逗号分隔字符串
+	ids := ""
+	for i, id := range req.CardIDs {
+		if i > 0 {
+			ids += ","
+		}
+		ids += fmt.Sprintf("%d", id)
+	}
+	history := domain.GameHistory{
+		Mode: req.Mode,
+		Type: req.Type,
+		Style: req.Style,
+		CardNumber: req.CardNumber,
+		CardIDs: ids,
+	}
+	if err := h.ser.SaveGameHistory(history); err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(200, gin.H{"message": "ok"})
+}
+
+func (h *hand) GetAllGameHistories(c *gin.Context) {
+	histories, err := h.ser.GetAllGameHistories()
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(200, gin.H{"data": histories})
+}
+
+func (h *hand) GetGameHistoriesByUserID(c *gin.Context) {
+	userID, ok := parseId(c, "user_id")
+	if !ok {
+		return
+	}
+	histories, err := h.ser.GetGameHistoriesByUserID(userID)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(200, gin.H{"data": histories})
 }

@@ -9,6 +9,10 @@ type GameService interface {
 	CreateCard(c domain.Card) error
 	DeleteCard(id uint64) error
 	GetCards(mode, ty, style, num int8) *[]domain.CardResponse
+	BatchCreateCards(cards []domain.Card) error
+	SaveGameHistory(h domain.GameHistory) error
+	GetAllGameHistories() ([]domain.GameHistory, error)
+	GetGameHistoriesByUserID(userID uint64) ([]domain.GameHistory, error)
 }
 
 func (s *ser) GetGameRoom(roomId, hostId uint64) *domain.GameRoom {
@@ -34,4 +38,20 @@ func (s *ser) GetCards(mode, ty, style, num int8) *[]domain.CardResponse {
 		cardsResponse = append(cardsResponse, c)
 	}
 	return &cardsResponse
+}
+
+func (s *ser) BatchCreateCards(cards []domain.Card) error {
+	return s.r.BatchCreatedCards(cards)
+}
+
+func (s *ser) SaveGameHistory(h domain.GameHistory) error {
+	return s.r.SaveGameHistory(h)
+}
+
+func (s *ser) GetAllGameHistories() ([]domain.GameHistory, error) {
+	return s.r.GetAllGameHistories()
+}
+
+func (s *ser) GetGameHistoriesByUserID(userID uint64) ([]domain.GameHistory, error) {
+	return s.r.GetGameHistoriesByUserID(userID)
 }
