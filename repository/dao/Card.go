@@ -23,7 +23,7 @@ func (d *dao) DeletedCard(c domain.Card) error {
 func (d *dao) GetCard(mode, ty, style, num int8) *[]domain.Card {
 	var cards []domain.Card
 	d.db.Model(&cards).
-		Where("mode = ? and type = ? and style = ?", mode, ty, style).
+		Where("mode & ? > 0 and type & ? > 0 and style = ?", mode, ty, style).
 		Order("RAND()").
 		Limit(int(num)).
 		Find(&cards)

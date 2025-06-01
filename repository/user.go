@@ -8,7 +8,7 @@ type User interface {
 }
 
 func (r *repo) CreateUser(user domain.User) error {
-	
+	user.Permission.Id = 1
 	return r.dao.CreateUser(user)
 }
 
